@@ -13,52 +13,44 @@
         name: nginx
         state: present
         update_cache: true
+
     - name: Enable nginx
       service:
         name: nginx.service
         enabled: true
         state: started
 
+    - name: Validate required paths
+      block:
+        - name: Check path {{OUTPUT_DIR}}
+          stat:
+            path: "{{OUTPUT_DIR}}"
+          register: OUTPUT_DIR_status
 
-    - name: Check path {{OUTPUT_DIR}}
-      stat:
-        path: "{{OUTPUT_DIR}}"
-      register: OUTPUT_DIR_status
-    
-    - name: If not exist {{OUTPUT_DIR}}
-      fail:
-        msg: "Path {{OUTPUT_DIR}} not exist"
-      when: not OUTPUT_DIR_status.stat.exists
+        - name: Check path {{SITE_DIR}}
+          stat:
+            path: "{{SITE_DIR}}"
+          register: SITE_DIR_status
 
-    - name: Check path {{SITE_DIR}}
-      stat:
-        path: "{{SITE_DIR}}"
-      register: SITE_DIR_status
-    
-    - name: If not exist {{SITE_DIR}}
-      fail:
-        msg: "Path {{SITE_DIR}} not exist"
-      when: not SITE_DIR_status.stat.exists
+        - name: Check path {{TEMPLATE}}
+          stat:
+            path: "{{TEMPLATE}}"
+          register: TEMPLATE_status
 
-    - name: Check path {{TEMPLATE}}
-      stat:
-        path: "{{TEMPLATE}}"
-      register: TEMPLATE_status
+        - name: Check path {{CONFIG}}
+          stat:
+            path: "{{CONFIG}}"
+          register: CONFIG_status
 
-    - name: If not exist {{TEMPLATE}}
-      fail:
-        msg: "Path {{TEMPLATE}} not exist"
-      when: not TEMPLATE_status.stat.exists
-
-    - name: Check path {{CONFIG}}
-      stat:
-        path: "{{CONFIG}}"
-      register: CONFIG_status
-
-    - name: If not exist {{CONFIG}}
-      fail:
-        msg: "Path {{CONFIG}} not exist"
-      when: not CONFIG_status.stat.exists
+      rescue:
+        - name: Fail if any path is missing
+          fail:
+            msg: >-
+              Required path does not exist: 
+              {% if not OUTPUT_DIR_status.stat.exists %}{{OUTPUT_DIR}}
+              {% elif not SITE_DIR_status.stat.exists %}{{SITE_DIR}}
+              {% elif not TEMPLATE_status.stat.exists %}{{TEMPLATE}}
+              {% else %}{{CONFIG}}{% endif %}
 
     - name: Create nginx-conf
       template:
@@ -69,4 +61,36 @@
       vars:
         listen: "{{ item.listen }}"
         server_name: "{{ item.server_name }}"
-        root: "{{ item.root }}"    
+        root: "{{ item.root }}"
+      register: nginx_config_changed
+      notify:
+        - Test nginx config
+        - Show nginx config errors
+        - Reload nginx
+
+    - name: Create folder in {{SITE_DIR}}
+      loop: "{{sites}}"
+      loop_control:
+        label: "{{ item.name }}"
+      file:
+        path: "{{SITE_DIR}}/{{item.server_name}}"
+        state: directory
+        mode: "0774"
+
+  handlers:
+    - name: Test nginx config
+      command: nginx -t
+      changed_when: false
+      register: nginx_test
+      ignore_errors: yes
+
+    - name: Show nginx config errors
+      debug:
+        var: nginx_test.stderr
+      when: nginx_test.rc != 0
+
+    - name: Reload nginx
+      systemd:
+        name: nginx
+        state: reloaded
+      when: nginx_test.rc == 0
