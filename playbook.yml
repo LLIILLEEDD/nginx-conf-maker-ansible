@@ -1,0 +1,72 @@
+---
+- name: nginx conf maker
+  hosts: localhost
+  become: yes
+
+  vars_files:
+    - vars/vars_path.yml
+    - params/params.yml
+
+  tasks:
+    - name: Install nginx dnf
+      dnf:
+        name: nginx
+        state: present
+        update_cache: true
+    - name: Enable nginx
+      service:
+        name: nginx.service
+        enabled: true
+        state: started
+
+
+    - name: Check path {{OUTPUT_DIR}}
+      stat:
+        path: "{{OUTPUT_DIR}}"
+      register: OUTPUT_DIR_status
+    
+    - name: If not exist {{OUTPUT_DIR}}
+      fail:
+        msg: "Path {{OUTPUT_DIR}} not exist"
+      when: not OUTPUT_DIR_status.stat.exists
+
+    - name: Check path {{SITE_DIR}}
+      stat:
+        path: "{{SITE_DIR}}"
+      register: SITE_DIR_status
+    
+    - name: If not exist {{SITE_DIR}}
+      fail:
+        msg: "Path {{SITE_DIR}} not exist"
+      when: not SITE_DIR_status.stat.exists
+
+    - name: Check path {{TEMPLATE}}
+      stat:
+        path: "{{TEMPLATE}}"
+      register: TEMPLATE_status
+
+    - name: If not exist {{TEMPLATE}}
+      fail:
+        msg: "Path {{TEMPLATE}} not exist"
+      when: not TEMPLATE_status.stat.exists
+
+    - name: Check path {{CONFIG}}
+      stat:
+        path: "{{CONFIG}}"
+      register: CONFIG_status
+
+    - name: If not exist {{CONFIG}}
+      fail:
+        msg: "Path {{CONFIG}} not exist"
+      when: not CONFIG_status.stat.exists
+
+    - name: Create nginx-conf
+      template:
+        dest: "{{OUTPUT_DIR}}/{{item.name}}.conf"
+        src: "{{TEMPLATE}}"
+        mode: 0774
+      loop: "{{sites}}"
+      vars:
+        listen: "{{ item.listen }}"
+        server_name: "{{ item.server_name }}"
+        root: "{{ item.root }}"    
