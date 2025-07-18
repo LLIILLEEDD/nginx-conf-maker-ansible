@@ -8,18 +8,22 @@
     - params/params.yml
 
   tasks:
-    - name: Install nginx dnf
-      dnf:
-        name: nginx
-        state: present
-        update_cache: true
 
-    - name: Enable nginx
-      service:
-        name: nginx.service
-        enabled: true
-        state: started
+# Проверяем установлен ли nginx
+    - name: Check installed nginx 
+      block:
+        - name: Check nginx
+          command: nginx -v
+          register: nginx_check
+          changed_when: false
+          failed_when: false
 
+        - name: Erorr msg
+          fail:
+            msg: "Nginx not installed"
+          when: nginx_check.rc != 0
+
+# Проверяем существуют ли необходимые пути переменных
     - name: Validate required paths
       block:
         - name: Check path {{OUTPUT_DIR}}
@@ -52,6 +56,18 @@
               {% elif not TEMPLATE_status.stat.exists %}{{TEMPLATE}}
               {% else %}{{CONFIG}}{% endif %}
 
+# Проверка на пустые значения и отсуствующие переменные
+    - name: Check required keys
+      assert:
+        that:
+          - item.name is defined and item.name is not none and item.name | trim | length > 0
+          - item.listen is defined and item.listen is not none and item.listen | trim | length > 0
+          - item.server_name is defined and item.server_name is not none and item.server_name | trim | length > 0
+          - item.root is defined and item.root is not none and item.root | trim | length > 0
+        fail_msg: "Missing required key in item: {{ item }}"
+      loop: "{{ sites }}"
+
+# Создаем конфиг файл, вызывает reload nginx если внесены изменения (changed)
     - name: Create nginx-conf
       template:
         dest: "{{OUTPUT_DIR}}/{{item.name}}.conf"
@@ -68,6 +84,7 @@
         - Show nginx config errors
         - Reload nginx
 
+# Создаем директорию в /storage/www
     - name: Create folder in {{SITE_DIR}}
       loop: "{{sites}}"
       loop_control:
@@ -77,6 +94,7 @@
         state: directory
         mode: "0774"
 
+# Nginx -t и reload сервиса
   handlers:
     - name: Test nginx config
       command: nginx -t
