@@ -1,4 +1,4 @@
 OUTPUT_DIR: /etc/nginx/conf.d
-TEMPLATE: /opt/ansible/ansible-lab/template
-CONFIG: /opt/ansible/ansible-lab/config
+TEMPLATE: /opt/nginx-conf-maker-ansible/template
+CONFIG: /opt/ansible-lab/config
 SITE_DIR: /storage/www
