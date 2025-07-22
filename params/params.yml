@@ -8,3 +8,8 @@ sites:
     listen: 192.168.56.35:80
     server_name: service-z.example.com
     root: /var/www/service-z
+    
+  - name: service-x
+    listen: 192.168.56.35:80
+    server_name: service-x.example.com
+    root: /var/www/service-x

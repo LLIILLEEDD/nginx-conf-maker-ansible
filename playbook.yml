@@ -8,22 +8,46 @@
     - params/params.yml
 
   tasks:
+    # Установка и настройка базовых компонентов
+    - name: Install nginx
+      package:
+        name: nginx
+        state: present
 
-# Проверяем установлен ли nginx
-    - name: Check installed nginx 
-      block:
-        - name: Check nginx
-          command: nginx -v
-          register: nginx_check
-          changed_when: false
-          failed_when: false
+    - name: Enable and start nginx service
+      systemd:
+        name: nginx
+        enabled: yes
+        state: started
 
-        - name: Erorr msg
-          fail:
-            msg: "Nginx not installed"
-          when: nginx_check.rc != 0
+    - name: Create /storage/www directory
+      file:
+        path: /storage/www
+        state: directory
+        mode: "0775"
 
-# Проверяем существуют ли необходимые пути переменных
+    - name: Create symlink /var/www -> /storage/www
+      file:
+        src: /storage/www
+        dest: /var/www
+        state: link
+        force: yes
+
+    - name: Check firewall state
+      command: firewall-cmd --state
+      register: firewall_state
+      changed_when: false
+      ignore_errors: yes
+
+    - name: Open http port in firewall
+      firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+      when: firewall_state.rc == 0
+      notify: Reload firewall
+
+    # Проверяем существуют ли необходимые пути переменных
     - name: Validate required paths
       block:
         - name: Check path {{OUTPUT_DIR}}
@@ -45,13 +69,13 @@
         - name: Fail if any path is missing
           fail:
             msg: >-
-              Required path does not exist: 
+              Required path does not exist:
               {% if not OUTPUT_DIR_status.stat.exists %}{{OUTPUT_DIR}}
               {% elif not SITE_DIR_status.stat.exists %}{{SITE_DIR}}
               {% elif not TEMPLATE_status.stat.exists %}{{TEMPLATE}}
               {% endif %}
 
-# Проверка на пустые значения и отсуствующие переменные
+    # Проверка на пустые значения и отсуствующие переменные
     - name: Check required keys
       assert:
         that:
@@ -62,7 +86,7 @@
         fail_msg: "Missing required key in item: {{ item }}"
       loop: "{{ sites }}"
 
-# Создаем конфиг файл, вызывает reload nginx если внесены изменения (changed)
+    # Создаем конфиг файл, вызывает reload nginx если внесены изменения (changed)
     - name: Create nginx-conf
       template:
         dest: "{{ OUTPUT_DIR }}/{{ item.name }}.conf"
@@ -79,7 +103,7 @@
         - Show nginx config errors
         - Reload nginx
 
-# Создаем директорию в /storage/www
+    # Создаем директорию в /storage/www
     - name: Create folder in {{SITE_DIR}}
       loop: "{{ sites }}"
       loop_control:
@@ -89,7 +113,7 @@
         state: directory
         mode: "0775"
 
-# Делаем запись в hosts
+    # Делаем запись в hosts
     - name: Adding a line to /etc/hosts
       loop: "{{ sites }}"
       vars:
@@ -100,10 +124,12 @@
         line: "{{ item.listen.split(':')[0] }}   {{ item.server_name }}"
         state: present
         insertafter: EOF
-#        regexp: ".*{{ item.server_name }}$"
 
-# Nginx -t и reload сервиса
   handlers:
+    - name: Reload firewall
+      command: firewall-cmd --reload
+      when: firewall_state.rc == 0
+
     - name: Test nginx config
       command: nginx -t
       changed_when: false
