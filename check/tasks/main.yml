@@ -1,0 +1,4 @@
+---
+# tasks file for validate
+- include_tasks: check_paths.yml
+- include_tasks: check_keys.yml

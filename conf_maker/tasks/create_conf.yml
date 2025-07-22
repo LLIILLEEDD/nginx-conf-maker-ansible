@@ -1,0 +1,18 @@
+---
+- name: Create nginx-conf
+# Создаем конфиг файл, вызывает reload nginx если внесены изменения (changed)
+  template:
+    dest: "{{ OUTPUT_DIR }}/{{ item.name }}.conf"
+    src: "{{ TEMPLATE }}"
+    mode: 0774
+  loop: "{{ sites }}"
+  vars:
+    listen: "{{ item.listen }}"
+    server_name: "{{ item.server_name }}"
+    root: "{{ item.root }}"
+  register: nginx_config_changed
+  notify:
+    - Test nginx config
+    - Show nginx config errors
+    - Reload nginx
+

@@ -1,0 +1,14 @@
+---
+- name: Check firewall state
+  command: firewall-cmd --state
+  register: firewall_state
+  changed_when: false
+  ignore_errors: yes
+
+- name: Open http port in firewall
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+  when: firewall_state.rc == 0
+  notify: reload firewall

@@ -1,0 +1,11 @@
+---
+# Создаем директорию в /storage/www
+- name: Create folder in {{SITE_DIR}}
+  loop: "{{ sites }}"
+  loop_control:
+    label: "{{ item.name }}"
+  file:
+    path: "{{ item.root }}"
+    state: directory
+    mode: "0775"
+

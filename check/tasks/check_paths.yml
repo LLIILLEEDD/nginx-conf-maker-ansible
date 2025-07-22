@@ -1,0 +1,28 @@
+---
+# Проверяем существуют ли необходимые пути переменных
+- name: Validate required paths
+  block:
+    - name: Check path {{OUTPUT_DIR}}
+      stat:
+        path: "{{OUTPUT_DIR}}"
+      register: OUTPUT_DIR_status
+
+    - name: Check path {{SITE_DIR}}
+      stat:
+        path: "{{SITE_DIR}}"
+      register: SITE_DIR_status
+
+    - name: Check path {{TEMPLATE}}
+      stat:
+        path: "{{TEMPLATE}}"
+      register: TEMPLATE_status
+
+  rescue:
+    - name: Fail if any path is missing
+      fail:
+        msg: >-
+          Required path does not exist:
+          {% if not OUTPUT_DIR_status.stat.exists %}{{OUTPUT_DIR}}
+          {% elif not SITE_DIR_status.stat.exists %}{{SITE_DIR}}
+          {% elif not TEMPLATE_status.stat.exists %}{{TEMPLATE}}
+          {% endif %}

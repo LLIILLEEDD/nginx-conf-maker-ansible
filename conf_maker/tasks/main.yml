@@ -1,0 +1,5 @@
+---
+# tasks file for conf_maker
+- include_tasks: create_conf.yml
+- include_tasks: create_site_dir.yml
+- include_tasks: add_line_in_hosts.yml

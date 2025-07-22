@@ -1,0 +1,13 @@
+---
+# Делаем запись в hosts
+- name: Adding a line to /etc/hosts
+  loop: "{{ sites }}"
+  vars:
+    listen: "{{ item.listen }}"
+    server_name: "{{ item.server_name }}"
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ item.listen.split(':')[0] }}   {{ item.server_name }}"
+    state: present
+    insertafter: EOF
+
