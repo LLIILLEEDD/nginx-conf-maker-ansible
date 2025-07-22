@@ -1,5 +1,10 @@
 sites:
   - name: service-b
-    listen: 192.168.60.35:80
+    listen: 192.168.56.35:80
     server_name: service-b.example.com
     root: /var/www/service-b
+    
+  - name: service-z
+    listen: 192.168.56.35:80
+    server_name: service-z.example.com
+    root: /var/www/service-z

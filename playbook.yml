@@ -70,10 +70,10 @@
 # Создаем конфиг файл, вызывает reload nginx если внесены изменения (changed)
     - name: Create nginx-conf
       template:
-        dest: "{{OUTPUT_DIR}}/{{item.name}}.conf"
-        src: "{{TEMPLATE}}"
+        dest: "{{ OUTPUT_DIR }}/{{ item.name }}.conf"
+        src: "{{ TEMPLATE }}"
         mode: 0774
-      loop: "{{sites}}"
+      loop: "{{ sites }}"
       vars:
         listen: "{{ item.listen }}"
         server_name: "{{ item.server_name }}"
@@ -86,13 +86,26 @@
 
 # Создаем директорию в /storage/www
     - name: Create folder in {{SITE_DIR}}
-      loop: "{{sites}}"
+      loop: "{{ sites }}"
       loop_control:
         label: "{{ item.name }}"
       file:
-        path: "{{SITE_DIR}}/{{item.server_name}}"
+        path: "{{ item.root }}"
         state: directory
-        mode: "0774"
+        mode: "0775"
+
+# Делаем запись в hosts
+    - name: Adding a line to /etc/hosts
+      loop: "{{ sites }}"
+      vars:
+        listen: "{{ item.listen }}"
+        server_name: "{{ item.server_name }}"
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ item.listen.split(':')[0] }}   {{ item.server_name }}"
+        state: present
+        insertafter: EOF
+#        regexp: ".*{{ item.server_name }}$"
 
 # Nginx -t и reload сервиса
   handlers:

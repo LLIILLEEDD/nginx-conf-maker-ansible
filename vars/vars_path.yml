@@ -1,4 +1,4 @@
 OUTPUT_DIR: /etc/nginx/conf.d
-TEMPLATE: /opt/nginx-conf-maker-ansible/template
-CONFIG: /opt/ansible-lab/config
+TEMPLATE: ./template/template.jinja2
+CONFIG: ./config
 SITE_DIR: /storage/www
