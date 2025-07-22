@@ -1,4 +1,3 @@
 OUTPUT_DIR: /etc/nginx/conf.d
 TEMPLATE: ./template/template.jinja2
-CONFIG: ./config
 SITE_DIR: /storage/www

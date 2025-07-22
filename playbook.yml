@@ -41,11 +41,6 @@
             path: "{{TEMPLATE}}"
           register: TEMPLATE_status
 
-        - name: Check path {{CONFIG}}
-          stat:
-            path: "{{CONFIG}}"
-          register: CONFIG_status
-
       rescue:
         - name: Fail if any path is missing
           fail:
@@ -54,7 +49,7 @@
               {% if not OUTPUT_DIR_status.stat.exists %}{{OUTPUT_DIR}}
               {% elif not SITE_DIR_status.stat.exists %}{{SITE_DIR}}
               {% elif not TEMPLATE_status.stat.exists %}{{TEMPLATE}}
-              {% else %}{{CONFIG}}{% endif %}
+              {% endif %}
 
 # Проверка на пустые значения и отсуствующие переменные
     - name: Check required keys
