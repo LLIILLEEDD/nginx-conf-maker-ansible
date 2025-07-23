@@ -1,4 +1,5 @@
 ---
 # tasks file for nginx_base
 - include_tasks: setup_nginx.yml
+- include_tasks: disable_selinux.yml
 - include_tasks: firewall.yml
