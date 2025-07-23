@@ -1,0 +1,11 @@
+---
+- name: Create test html.index
+  loop: "{{ sites }}"
+  template:
+    dest: "{{ item.root }}/index.html"
+    src: "{{ TEMPLATE_HTML }}"
+    mode: 0774
+  vars:
+    listen: "{{ item.listen }}"
+    server_name: "{{ item.server_name }}"
+    root: "{{ item.root }}"

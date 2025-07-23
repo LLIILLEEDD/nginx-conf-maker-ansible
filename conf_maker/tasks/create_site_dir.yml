@@ -1,6 +1,6 @@
 ---
 # Создаем директорию в /storage/www
-- name: Create folder in {{SITE_DIR}}
+- name: Create folder in {{ SITE_DIR }}
   loop: "{{ sites }}"
   loop_control:
     label: "{{ item.name }}"

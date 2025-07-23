@@ -2,20 +2,25 @@
 # Проверяем существуют ли необходимые пути переменных
 - name: Validate required paths
   block:
-    - name: Check path {{OUTPUT_DIR}}
+    - name: Check path {{ OUTPUT_DIR }}
       stat:
-        path: "{{OUTPUT_DIR}}"
+        path: "{{ OUTPUT_DIR }}"
       register: OUTPUT_DIR_status
 
-    - name: Check path {{SITE_DIR}}
+    - name: Check path {{ SITE_DIR }}
       stat:
-        path: "{{SITE_DIR}}"
+        path: "{{ SITE_DIR }}"
       register: SITE_DIR_status
 
-    - name: Check path {{TEMPLATE}}
+    - name: Check path {{ TEMPLATE_CONF }}
       stat:
-        path: "{{TEMPLATE}}"
-      register: TEMPLATE_status
+        path: "{{ TEMPLATE_CONF }}"
+      register: TEMPLATE_CONF_status
+
+    - name: Check path {{ TEMPLATE_HTML }}
+      stat:
+        path: "{{ TEMPLATE_HTML }}"
+      register: TEMPLATE_HTML_status
 
   rescue:
     - name: Fail if any path is missing
@@ -24,5 +29,6 @@
           Required path does not exist:
           {% if not OUTPUT_DIR_status.stat.exists %}{{OUTPUT_DIR}}
           {% elif not SITE_DIR_status.stat.exists %}{{SITE_DIR}}
-          {% elif not TEMPLATE_status.stat.exists %}{{TEMPLATE}}
+          {% elif not TEMPLATE_CONF_status.stat.exists %}{{TEMPLATE_CONF}}
+          {% elif not TEMPLATE_HTML_status.stat.exists %}{{TEMPLATE_HTML}}
           {% endif %}

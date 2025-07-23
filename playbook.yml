@@ -5,6 +5,7 @@
     - nginx_base
     - check
     - conf_maker 
+    - test_html_maker
   vars_files:
     - vars/vars_path.yml
     - params/params.yml

@@ -3,7 +3,7 @@
 # Создаем конфиг файл, вызывает reload nginx если внесены изменения (changed)
   template:
     dest: "{{ OUTPUT_DIR }}/{{ item.name }}.conf"
-    src: "{{ TEMPLATE }}"
+    src: "{{ TEMPLATE_CONF }}"
     mode: 0774
   loop: "{{ sites }}"
   vars:

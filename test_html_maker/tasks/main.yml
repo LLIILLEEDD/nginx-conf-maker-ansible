@@ -1,0 +1,3 @@
+---
+# tasks file for test_html_maker
+- include_tasks: create_html.yml

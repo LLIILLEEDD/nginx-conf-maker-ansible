@@ -12,13 +12,13 @@
 
 - name: Create /storage/www directory
   file:
-    path: /storage/www
+    path: "{{ SITE_DIR }}"
     state: directory
     mode: "0775"
 
-- name: Create symlink /var/www -> /storage/www
+- name: Create symlink /var/www -> "{{ SITE_DIR }}"
   file:
-    src: /storage/www
+    src: "{{ SITE_DIR }}"
     dest: /var/www
     state: link
     force: yes
