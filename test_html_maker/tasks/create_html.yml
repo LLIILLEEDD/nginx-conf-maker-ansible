@@ -1,6 +1,8 @@
 ---
 - name: Create test html.index
   loop: "{{ sites }}"
+  loop_control:
+    label: "{{ item.name }}"
   template:
     dest: "{{ item.root }}/index.html"
     src: "{{ TEMPLATE_HTML }}"

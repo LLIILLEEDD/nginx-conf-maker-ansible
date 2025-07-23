@@ -2,6 +2,8 @@
 # Делаем запись в hosts
 - name: Adding a line to /etc/hosts
   loop: "{{ sites }}"
+  loop_control:
+    label: "{{ item.name }}"
   vars:
     listen: "{{ item.listen }}"
     server_name: "{{ item.server_name }}"
