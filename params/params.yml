@@ -1,20 +1,6 @@
 sites:
-  - name: service-b
-    listen: 192.168.56.35:80
-    server_name: service-b.example.com
-    root: /var/www/service-b
-    
-  - name: service-z
-    listen: 192.168.56.35:80
-    server_name: service-z.example.com
-    root: /var/www/service-z
-    
-  - name: service-x
-    listen: 192.168.56.35:80
-    server_name: service-x.example.com
-    root: /var/www/service-x
-    
-  - name: service-g
-    listen: 192.168.56.35:80
-    server_name: service-g.example.com
-    root: /var/www/service-g
+
+# - name: site name
+#   listen: IP:PORT
+#   server_name: domain_name
+#   root: path_to_site_root
