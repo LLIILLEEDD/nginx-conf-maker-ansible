@@ -9,12 +9,11 @@
   loop_control:
     label: "{{ item.name }}"
   vars:
-    listen: "{{ item.listen }}"
-    server_name: "{{ item.server_name }}"
-    root: "{{ item.root }}"
+    listen_value: "{{ item.listen }}"
+    server_name_value: "{{ item.server_name }}"
+    root_value: "{{ item.root }}"
   register: nginx_config_changed
   notify:
     - Test nginx config
     - Show nginx config errors
     - Reload nginx
-
