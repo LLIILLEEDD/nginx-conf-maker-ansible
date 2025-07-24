@@ -20,7 +20,7 @@
 
 2. **check** - Валидация входных параметров и проверка файловой структуры
 
-3. **conf_maker** - Создает на основе .jinja2 шаблона .conf файлы для nginx в conf.d. вызывает reload сервиса nginx eсли был _change_
+3. **conf_maker** - Создает на основе .jinja2 шаблона .conf файлы для nginx в /conf.d вызывает reload сервиса nginx eсли был _change_
 
 4. **test_html_make** - Создание тестовой HTML-страницы с параметрами виртуального хоста
 
@@ -36,7 +36,10 @@ ansible-playbook -i inventory playbook.yml
 ```
 
 ---
-На выходе получаем .conf файл с нужными нам значениями и тестовую html страницу, чтобы через curl сразу увидеть что все поднялось правильно
+На выходе получаем .conf файл с нужными нам значениями и тестовую html страницу, чтобы через curl сразу увидеть что все поднялось правильно. Также вносятся ip и доменное имя сайта в /etc/hosts 
+
+<img width="1038" height="175" alt="image" src="https://github.com/user-attachments/assets/17987afc-7ee3-4ad2-ab81-b11052be93c1" />
+
 
 <img width="767" height="330" alt="image" src="https://github.com/user-attachments/assets/63f517ba-faba-44a2-ad69-914647339cb0" />
 
