@@ -44,7 +44,7 @@ ansible-playbook -i inventory playbook.yml
 <img width="767" height="330" alt="image" src="https://github.com/user-attachments/assets/63f517ba-faba-44a2-ad69-914647339cb0" />
 
 
-## Требования для локального теста
+# Требования для локального теста
 
 - Доступ к sudo
 - Ansible
