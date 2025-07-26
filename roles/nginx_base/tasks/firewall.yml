@@ -3,12 +3,21 @@
   command: firewall-cmd --state
   register: firewall_state
   changed_when: false
-  ignore_errors: yes
+  failed_when: false
+
+- name: Ensure firewalld is running (start if not active)
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+  when: firewall_state.rc != 0
+  register: firewalld_started
 
 - name: Open http port in firewall
   firewalld:
     service: http
     permanent: yes
     state: enabled
-  when: firewall_state.rc == 0
+  when: firewall_state.rc == 0 or firewalld_started is changed
   notify: reload firewall
+
