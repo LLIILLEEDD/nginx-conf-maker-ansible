@@ -1,11 +1,9 @@
 ---
 - name: Disable SELinux persistently
-  replace:
-    path: /etc/selinux/config
-    regexp: '^SELINUX=enforcing'
-    replace: 'SELINUX=disabled'
+  ansible.posix.selinux:
+    policy: targeted
+    state: disabled
 
 - name: Disable SELinux temporarily
   command: setenforce 0
   when: ansible_selinux.status == "enabled"
-  ignore_errors: true
