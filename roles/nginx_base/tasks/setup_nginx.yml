@@ -9,4 +9,3 @@
     name: nginx
     enabled: yes
     state: started
-    выаыва
