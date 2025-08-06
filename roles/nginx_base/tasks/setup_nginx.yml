@@ -9,16 +9,4 @@
     name: nginx
     enabled: yes
     state: started
-
-- name: Create /storage/www directory
-  file:
-    path: "{{ SITE_DIR }}"
-    state: directory
-    mode: "0775"
-
-- name: Create symlink /var/www -> "{{ SITE_DIR }}"
-  file:
-    src: "{{ SITE_DIR }}"
-    dest: /var/www
-    state: link
-    force: yes
+    выаыва

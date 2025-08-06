@@ -1,34 +1,25 @@
 ---
 # Проверяем существуют ли необходимые пути переменных
-- name: Validate required paths
-  block:
-    - name: Check path {{ OUTPUT_DIR }}
-      stat:
-        path: "{{ OUTPUT_DIR }}"
-      register: OUTPUT_DIR_status
+- name: Create {{ SITE_DIR }}
+  file:
+  path: "{{ SITE_DIR }}"
+  state: directory
+  mode: "0775"
 
-    - name: Check path {{ SITE_DIR }}
-      stat:
-        path: "{{ SITE_DIR }}"
-      register: SITE_DIR_status
+- name: Create {{ OUTPUT_DIR }}
+  file:
+  path: "{{ OUTPUT_DIR }}"
+  state: directory
+  mode: "0751"
 
-    - name: Check path {{ TEMPLATE_CONF }}
-      stat:
-        path: "{{ TEMPLATE_CONF }}"
-      register: TEMPLATE_CONF_status
+- name: Create {{ TEMPLATE_CONF }}
+  file:
+  path: "{{ TEMPLATE_CONF }}"
+  state: touch
+  mode: "0644"
 
-    - name: Check path {{ TEMPLATE_HTML }}
-      stat:
-        path: "{{ TEMPLATE_HTML }}"
-      register: TEMPLATE_HTML_status
-
-  rescue:
-    - name: Fail if any path is missing
-      fail:
-        msg: >-
-          Required path does not exist:
-          {% if not OUTPUT_DIR_status.stat.exists %}{{OUTPUT_DIR}}
-          {% elif not SITE_DIR_status.stat.exists %}{{SITE_DIR}}
-          {% elif not TEMPLATE_CONF_status.stat.exists %}{{TEMPLATE_CONF}}
-          {% elif not TEMPLATE_HTML_status.stat.exists %}{{TEMPLATE_HTML}}
-          {% endif %}
+- name: Create {{ TEMPLATE_HTML }}
+  file:
+  path: "{{ TEMPLATE_HTML }}"
+  state: touch
+  mode: "0644"
