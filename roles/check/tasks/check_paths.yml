@@ -1,25 +1,25 @@
 ---
 # Проверяем существуют ли необходимые пути переменных
-- name: Create {{ SITE_DIR }}
+- name: "Create {{ SITE_DIR }}"
   file:
-  path: "{{ SITE_DIR }}"
-  state: directory
-  mode: "0775"
+    path: "{{ SITE_DIR }}"
+    state: directory
+    mode: "0775"
 
-- name: Create {{ OUTPUT_DIR }}
+- name: "Create {{ OUTPUT_DIR }}"
   file:
-  path: "{{ OUTPUT_DIR }}"
-  state: directory
-  mode: "0751"
+    path: "{{ OUTPUT_DIR }}"
+    state: directory
+    mode: "0751"
 
-- name: Create {{ TEMPLATE_CONF }}
+- name: "Create {{ TEMPLATE_CONF }}"
   file:
-  path: "{{ TEMPLATE_CONF }}"
-  state: touch
-  mode: "0644"
+    path: "{{ TEMPLATE_CONF }}"
+    state: touch
+    mode: "0644"
 
-- name: Create {{ TEMPLATE_HTML }}
+- name: "Create {{ TEMPLATE_HTML }}"
   file:
-  path: "{{ TEMPLATE_HTML }}"
-  state: touch
-  mode: "0644"
+    path: "{{ TEMPLATE_HTML }}"
+    state: touch
+    mode: "0644"
