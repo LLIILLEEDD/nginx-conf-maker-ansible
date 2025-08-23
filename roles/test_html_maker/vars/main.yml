@@ -1,1 +1,1 @@
-TEMPLATE_HTML: ./templates/template_test_html.jinja2
+TEMPLATE_HTML: template_test_html.jinja2
