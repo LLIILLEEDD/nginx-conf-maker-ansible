@@ -25,9 +25,10 @@
 4. **test_html_make** - Создание тестовой HTML-страницы с параметрами виртуального хоста
 
 # Как работает плейбук
-Все собственно как и раньше, мы вписываем нужные данные в group_vars/all.yml
+Все собственно как и раньше, мы вписываем нужные данные в group_vars\all\sites.yml
 
-<img width="638" height="384" alt="image" src="https://github.com/user-attachments/assets/f515a53c-5a33-4b9b-851e-ae5754bdedc6" />
+<img width="587" height="320" alt="image" src="https://github.com/user-attachments/assets/db9329ad-ed16-47bd-805e-4284af81faca" />
+
 
 
 ---
