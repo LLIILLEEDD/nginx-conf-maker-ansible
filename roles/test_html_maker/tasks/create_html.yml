@@ -6,7 +6,7 @@
   template:
     dest: "{{ item.root }}/index.html"
     src: "{{ TEMPLATE_HTML }}"
-    mode: 0774
+    mode: 0644
   vars:
     listen_text: "{{ item.listen }}"
     server_name_text: "{{ item.server_name }}"

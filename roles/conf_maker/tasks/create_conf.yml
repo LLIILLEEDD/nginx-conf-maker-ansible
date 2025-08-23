@@ -4,7 +4,7 @@
   template:
     dest: "{{ OUTPUT_DIR }}/{{ item.name }}.conf"
     src: "{{ TEMPLATE_CONF }}"
-    mode: 0774
+    mode: 0644
   loop: "{{ sites }}"
   loop_control:
     label: "{{ item.name }}"
