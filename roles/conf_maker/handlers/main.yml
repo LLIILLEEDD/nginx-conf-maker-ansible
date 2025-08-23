@@ -2,18 +2,8 @@
 # handlers file for conf_maker
 - name: Test nginx config
   command: nginx -t
-  changed_when: false
-  register: nginx_test
-  ignore_errors: yes
-
-- name: Show nginx config errors
-  debug:
-    var: nginx_test.stderr
-  when: nginx_test.rc != 0
 
 - name: Reload nginx
   systemd:
     name: nginx
     state: reloaded
-  when: nginx_test.rc == 0
-
