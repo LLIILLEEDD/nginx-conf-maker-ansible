@@ -1,8 +1,0 @@
-SITE_DIR: /storage/www
-
-sites:
-
-# - name: site name
-#   listen: IP:PORT
-#   server_name: domain_name
-#   root: path_to_site_root

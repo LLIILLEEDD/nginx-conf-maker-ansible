@@ -1,0 +1,16 @@
+sites:
+
+# - name: site name
+#   listen: IP:PORT
+#   server_name: domain_name
+#   root: path_to_site_root
+
+- name: lol
+  listen: 192.168.56.35:80
+  server_name: lol.www
+  root: /var/www/lol
+
+- name: lol3
+  listen: 192.168.56.35:80
+  server_name: lol3.www
+  root: /var/www/lol3
