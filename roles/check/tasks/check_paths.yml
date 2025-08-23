@@ -11,15 +11,3 @@
     path: "{{ OUTPUT_DIR }}"
     state: directory
     mode: "0751"
-
-- name: "Create {{ TEMPLATE_CONF }}"
-  file:
-    path: "{{ TEMPLATE_CONF }}"
-    state: touch
-    mode: "0644"
-
-- name: "Create {{ TEMPLATE_HTML }}"
-  file:
-    path: "{{ TEMPLATE_HTML }}"
-    state: touch
-    mode: "0644"

@@ -1,3 +1,5 @@
+SITE_DIR: /storage/www
+
 sites:
 
 # - name: site name
