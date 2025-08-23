@@ -15,5 +15,4 @@
   register: nginx_config_changed
   notify:
     - Test nginx config
-    - Show nginx config errors
     - Reload nginx
